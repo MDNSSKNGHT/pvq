@@ -4,10 +4,20 @@
 #include <stdbool.h>
 #include <math.h>
 
+#define TOKEN_CONJUCTION "and"
+#define TOKEN_DISJUNCTION "or"
+#define TOKEN_NEGATION "not"
+#define TOKEN_EXCLUSIVE_DISJUNCTION "xor"
+#define TOKEN_IMPLICATION "implies"
+#define TOKEN_DOUBLE_IMPLICATION "iff"
+
 enum logical_operator {
-	AND,
-	OR,
-	XOR
+	CONJUCTION,
+	DISJUNCTION,
+	NEGATION,
+	EXCLUSIVE_DISJUNCTION,
+	IMPLICATION,
+	DOUBLE_IMPLICATION
 };
 
 int main(int argc, char const *argv[])
@@ -30,16 +40,21 @@ int main(int argc, char const *argv[])
 	tk = strtok(d, " ");
 
 	while (tk != NULL) {
-		if (strcmp(tk, "and") == 0) {
-			op = AND;
-			oa[0] = "and";
-		}
-		else if (strcmp(tk, "or") == 0) {
-			op = OR;
-			oa[0] = "or";
-		} else if (strcmp(tk, "xor") == 0) {
-			op = XOR;
-			oa[0] = "xor";
+		if (strcmp(tk, TOKEN_CONJUCTION) == 0) {
+			op = CONJUCTION;
+			oa[0] = tk;
+		} else if (strcmp(tk, TOKEN_DISJUNCTION) == 0) {
+			op = DISJUNCTION;
+			oa[0] = tk;
+		} else if (strcmp(tk, TOKEN_EXCLUSIVE_DISJUNCTION) == 0) {
+			op = EXCLUSIVE_DISJUNCTION;
+			oa[0] = tk;
+		} else if (strcmp(tk, TOKEN_IMPLICATION) == 0) {
+			op = IMPLICATION;
+			oa[0] = tk;
+		} else if (strcmp(tk, TOKEN_DOUBLE_IMPLICATION) == 0) {
+			op = DOUBLE_IMPLICATION;
+			oa[0] = tk;
 		} else {
 			sa[sc] = strdup(tk);
 			sc++;
@@ -58,14 +73,23 @@ int main(int argc, char const *argv[])
 
 	for (int i = 0; i < vc; ++i) {
 		switch (op) {
-			case AND:
+			case CONJUCTION:
 				tv[i] = sv[0][i] & sv[1][i];
 				break;
-			case OR:
+			case DISJUNCTION:
 				tv[i] = sv[0][i] | sv[1][i];
 				break;
-			case XOR:
+			case NEGATION:
+				// TODO
+				break;
+			case EXCLUSIVE_DISJUNCTION:
 				tv[i] = sv[0][i] ^ sv[1][i];
+				break;
+			case IMPLICATION:
+				tv[i] = (sv[0][i] ^ 0x1) | sv[1][i];
+				break;
+			case DOUBLE_IMPLICATION:
+				tv[i] = (sv[0][i] & sv[1][i]) | ((sv[0][i] | sv[1][i]) ^ 0x1);
 				break;
 		}
 	}
